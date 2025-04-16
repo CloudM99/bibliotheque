@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "849052348139",
+    "project_id": "bibliotheque-2d507",
+    "storage_bucket": "bibliotheque-2d507.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849052348139:android:d8f51fa26ef9761ab718ae",
+        "android_client_info": {
+          "package_name": "fr.limoges.valadon.bibliotheque.bibliotheque"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDee3wiNJBPBdpSwwme2xuj-hXMUyn10ug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
