@@ -4,8 +4,19 @@ import '../../viewmodel/viewModelUser/UserViewModel.dart';
 import '../../model/User.dart';
 
 /// Widget pour modifier un utilisateur existant.
-class ModifierUserView extends StatelessWidget {
+class ModifierUserView extends StatefulWidget {
   final User user;
+
+  /// Constructeur de la vue pour modifier un utilisateur.
+  ///
+  /// [user] : L'utilisateur à modifier.
+  ModifierUserView({required this.user});
+
+  @override
+  _ModifierUserViewState createState() => _ModifierUserViewState();
+}
+
+class _ModifierUserViewState extends State<ModifierUserView> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _prenomUserController = TextEditingController();
@@ -14,19 +25,18 @@ class ModifierUserView extends StatelessWidget {
   final List<String> _roles = ['admin', 'user'];
   String? _selectedRole;
 
-  /// Constructeur de la vue pour modifier un utilisateur.
-  ///
-  /// [user] : L'utilisateur à modifier.
-  ModifierUserView({required this.user});
+  @override
+  void initState() {
+    super.initState();
+    // Initialiser les contrôleurs avec les valeurs actuelles de l'utilisateur.
+    _userNameController.text = widget.user.userName;
+    _prenomUserController.text = widget.user.prenomUser;
+    _loginUserController.text = widget.user.loginUser;
+    _selectedRole = widget.user.roleUser;
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Initialiser les contrôleurs avec les valeurs actuelles de l'utilisateur.
-    _userNameController.text = user.userName;
-    _prenomUserController.text = user.prenomUser;
-    _loginUserController.text = user.loginUser;
-    _selectedRole = user.roleUser;
-
     return Scaffold(
       appBar: AppBar(title: Text("Modifier l'Utilisateur")),
       body: Padding(
@@ -91,7 +101,9 @@ class ModifierUserView extends StatelessWidget {
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
-                  _selectedRole = newValue;
+                  setState(() {
+                    _selectedRole = newValue;
+                  });
                 },
                 validator: (value) {
                   if (value == null) {
@@ -107,7 +119,7 @@ class ModifierUserView extends StatelessWidget {
                   if (_formKey.currentState!.validate()) {
                     // Mettre à jour l'utilisateur via le ViewModel.
                     Provider.of<UserViewModel>(context, listen: false).mettreAJourUser(
-                      user.idUser!,
+                      widget.user.idUser!,
                       _userNameController.text,
                       _prenomUserController.text,
                       _loginUserController.text,

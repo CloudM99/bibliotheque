@@ -24,7 +24,9 @@ class UserListView extends StatelessWidget {
     final userViewModel = Provider.of<UserViewModel>(context);
 
     // Charger les utilisateurs lors de la construction de la vue.
-    Future.microtask(() => userViewModel.chargerUtilisateurs());
+    if (userViewModel.utilisateurs.isEmpty) {
+      Future.microtask(() => userViewModel.chargerUtilisateurs());
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -39,67 +41,63 @@ class UserListView extends StatelessWidget {
             );
           },
         ),
-        actions: userRole == 'admin'
-            ? [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AjouterUserView()),
-              );
-            },
-          ),
-        ]
-            : [],
+        actions: [
+          if (userRole == 'admin')
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AjouterUserView()),
+                );
+              },
+            ),
+        ],
       ),
-      body: Consumer<UserViewModel>(
-        builder: (context, userViewModel, child) {
-          if (userViewModel.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (userViewModel.utilisateurs.isEmpty) {
-            return const Center(child: Text('Aucun utilisateur disponible.'));
-          }
-          return ListView.builder(
-            itemCount: userViewModel.utilisateurs.length,
-            itemBuilder: (context, index) {
-              final user = userViewModel.utilisateurs[index];
-              return CustomCard(
-                title: user.userName,
-                subtitle: user.roleUser,
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ModifierUserView(user: user),
-                          ),
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => ConfirmDeleteDialog(
-                            title: 'Confirmer la suppression',
-                            content: "Etes-vous sûr de vouloir supprimer l'utilisateur ?",
-                            onConfirm: () {
-                              userViewModel.supprimerUser(user.idUser!);
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              );
+      body: userViewModel.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : userViewModel.utilisateurs.isEmpty
+          ? const Center(child: Text('Aucun utilisateur disponible.'))
+          : ListView.builder(
+        itemCount: userViewModel.utilisateurs.length,
+        itemBuilder: (context, index) {
+          final user = userViewModel.utilisateurs[index];
+          return CustomCard(
+            title: user.userName,
+            subtitle: user.roleUser,
+            userRole: userRole,
+            onTap: () {
+              if (userRole == 'admin') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ModifierUserView(user: user),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Vous n\'avez pas les permissions suffisantes pour modifier cet utilisateur.')),
+                );
+              }
+            },
+            onDelete: () {
+              if (userRole == 'admin') {
+                showDialog(
+                  context: context,
+                  builder: (context) => ConfirmDeleteDialog(
+                    title: 'Supprimer l\'utilisateur',
+                    content: 'Voulez-vous vraiment supprimer cet utilisateur ?',
+                    onConfirm: () {
+                      Provider.of<UserViewModel>(context, listen: false)
+                          .supprimerUser(user.idUser!);
+                    },
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Vous n\'avez pas les permissions suffisantes pour supprimer cet utilisateur.')),
+                );
+              }
             },
           );
         },

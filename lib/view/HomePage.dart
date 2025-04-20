@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text('Gérer les livres'),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AjouterLivreView(userName: widget.userName, userRole: widget.userRole),
+                    builder: (context) => LivreListView(userName: widget.userName, userRole: widget.userRole),
                   ));
                 },
               ),

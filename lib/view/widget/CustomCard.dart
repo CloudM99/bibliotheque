@@ -30,7 +30,7 @@ class CustomCard extends StatelessWidget {
     this.displayJacket = false,
     this.onDelete,
     this.onTap,
-    this.trailing,
+    this.trailing, Row? actions,
   });
 
   @override

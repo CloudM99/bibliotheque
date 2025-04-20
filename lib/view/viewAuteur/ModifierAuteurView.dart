@@ -4,11 +4,8 @@ import '../../viewmodel/viewModelAuteur/AuteurViewModel.dart';
 import '../../model/Auteur.dart';
 
 /// Widget pour modifier un auteur existant.
-class ModifierAuteurView extends StatelessWidget {
+class ModifierAuteurView extends StatefulWidget {
   final Auteur auteur;
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nomAuteurController = TextEditingController();
-  final TextEditingController _detailController = TextEditingController();
 
   /// Constructeur de la vue pour modifier un auteur.
   ///
@@ -16,10 +13,24 @@ class ModifierAuteurView extends StatelessWidget {
   ModifierAuteurView({required this.auteur});
 
   @override
-  Widget build(BuildContext context) {
-    _nomAuteurController.text = auteur.nomAuteur;
-    _detailController.text = auteur.detail;
+  _ModifierAuteurViewState createState() => _ModifierAuteurViewState();
+}
 
+class _ModifierAuteurViewState extends State<ModifierAuteurView> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nomAuteurController = TextEditingController();
+  final TextEditingController _detailController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialiser les contrôleurs avec les valeurs actuelles de l'auteur.
+    _nomAuteurController.text = widget.auteur.nomAuteur;
+    _detailController.text = widget.auteur.detail;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Modifier l'Auteur")),
       body: Padding(
@@ -58,7 +69,7 @@ class ModifierAuteurView extends StatelessWidget {
                   if (_formKey.currentState!.validate()) {
                     /// Mettre à jour l'auteur via le ViewModel avec le détail mis à jour.
                     Provider.of<AuteurViewModel>(context, listen: false)
-                        .mettreAJourAuteur(auteur.idAuteur!, _nomAuteurController.text, _detailController.text);
+                        .mettreAJourAuteur(widget.auteur.idAuteur!, _nomAuteurController.text, _detailController.text);
                     Navigator.pop(context); // Revenir à la liste des auteurs.
                   }
                 },
