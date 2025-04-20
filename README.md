@@ -13,11 +13,10 @@ Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur 
     Un simulateur iOS ou un appareil physique (pour tester l'application iOS)
 
 Installation
+Cloner le projet :
 
-    Cloner le projet :
-
-git clone https://github.com/votre-repo/bibliotheque.git
-cd bibliotheque
+    Cloner le projet : git clone https://github.com/CloudM99/bibliotheque.git cd bibliotheque
+    
 
 Installer les dépendances :
 
@@ -45,8 +44,9 @@ flutter run
 Démarrer l'application sur iOS :
 
     flutter run
+    
 
-    Accéder à l'application :
+Accéder à l'application :
         L'application devrait se lancer sur l'émulateur ou l'appareil physique connecté.
 
 Documentation
